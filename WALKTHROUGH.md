@@ -33,7 +33,7 @@ Show provider separation, cached batched calls, input validation, provider failu
 - [ ] Re-run all tests and a current live route request.
 - [x] Publish the reviewed source to GitHub.
 - [x] Deploy to Vercel and verify public frontend assets and a real hosted API request.
-- [x] Complete initial production browser/console verification (repeat after material UI updates).
+- [x] Complete production desktop-browser/console verification, including the location-picker update and repeated-selection regression fix.
 - [ ] Record a genuine 5–10 minute Loom walkthrough.
 - [ ] Review the final three links before submitting them to the employer.
 
