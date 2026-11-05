@@ -8,7 +8,7 @@ Explain the goal: compare real routes using weather expected when the truck reac
 
 ## 1:00–3:00 · Live planning flow
 
-1. Search and select an origin and destination. Chicago to Indianapolis is a modest first smoke-test journey; try other nearby cities if a provider is temporarily unavailable.
+1. Select the Chicago → Detroit example trip, or type cities and choose automatic suggestions. Show how Pick origin/Pick destination places map pins and how dragging adjusts them. These set trip inputs only; they do not invent routes or weather.
 2. Choose a near-future departure, load weight and 25-mile spacing.
 3. Generate a plan. Explain that OSRM is asked for three distinct alternatives and may return fewer; the app makes that visible rather than inventing options.
 4. Compare distance, time, eligibility and severity mileage. Select another route and inspect its checkpoint ETA, wind, rain/snow and reason.
@@ -33,7 +33,7 @@ Show provider separation, cached batched calls, input validation, provider failu
 - [ ] Re-run all tests and a current live route request.
 - [x] Publish the reviewed source to GitHub.
 - [x] Deploy to Vercel and verify public frontend assets and a real hosted API request.
-- [ ] Complete interactive browser/console verification.
+- [x] Complete initial production browser/console verification (repeat after material UI updates).
 - [ ] Record a genuine 5–10 minute Loom walkthrough.
 - [ ] Review the final three links before submitting them to the employer.
 

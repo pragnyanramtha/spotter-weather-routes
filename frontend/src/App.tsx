@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import PlaceInput from "./PlaceInput";
 import MapWorkspace from "./MapWorkspace";
+import { EXAMPLE_TRIPS } from "./placeSuggestions";
 import {
   COLORS,
   LABELS,
@@ -38,6 +39,7 @@ export default function App() {
   const [hour, setHour] = useState(0);
   const [heat, setHeat] = useState(true);
   const [stale, setStale] = useState(false);
+  const [picking, setPicking] = useState<"origin" | "destination" | null>(null);
   const recommended = plan?.routes.find(
     (r) => r.id === plan.recommended_route_id && canRecommend(r),
   );
@@ -46,13 +48,36 @@ export default function App() {
     callback();
     if (plan) setStale(true);
   }
+  function pickOnMap(endpoint: "origin" | "destination" | null) {
+    if (busy) return;
+    setPicking(endpoint);
+    if (endpoint) {
+      document.getElementById("map-workspace")?.scrollIntoView?.({
+        behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)")
+          .matches
+          ? "instant"
+          : "smooth",
+        block: "center",
+      });
+    }
+  }
+  function changePlace(
+    endpoint: "origin" | "destination",
+    place: Place | null,
+  ) {
+    if (busy) return;
+    edit(() =>
+      endpoint === "origin" ? setOrigin(place) : setDestination(place),
+    );
+    setPicking(null);
+  }
   async function generate(e: React.FormEvent) {
     e.preventDefault();
     if (busy) return;
     setError("");
     if (!origin || !destination) {
       setError(
-        "Choose both locations from search results or enter valid coordinates.",
+        "Choose both locations from city suggestions, map pins, or valid coordinates.",
       );
       return;
     }
@@ -75,6 +100,7 @@ export default function App() {
       setError("Choose a departure between now and 48 hours from now.");
       return;
     }
+    setPicking(null);
     setBusy(true);
     try {
       const response = await fetch("/api/plan/", {
@@ -150,14 +176,50 @@ export default function App() {
                   <PlaceInput
                     label="Origin"
                     value={origin}
-                    onChange={(p) => edit(() => setOrigin(p))}
+                    onChange={(p) => changePlace("origin", p)}
+                    picking={picking === "origin"}
+                    onPickMap={() =>
+                      pickOnMap(picking === "origin" ? null : "origin")
+                    }
                   />
                   <PlaceInput
                     label="Destination"
                     value={destination}
-                    onChange={(p) => edit(() => setDestination(p))}
+                    onChange={(p) => changePlace("destination", p)}
+                    picking={picking === "destination"}
+                    onPickMap={() =>
+                      pickOnMap(
+                        picking === "destination" ? null : "destination",
+                      )
+                    }
                   />
                 </div>
+              </div>
+              <div className="example-trips">
+                <div className="example-trips-heading">Try an example trip</div>
+                <div className="example-trip-buttons">
+                  {EXAMPLE_TRIPS.map((trip) => (
+                    <button
+                      type="button"
+                      key={trip.label}
+                      onClick={() => {
+                        edit(() => {
+                          setOrigin(trip.origin);
+                          setDestination(trip.destination);
+                        });
+                        setPicking(null);
+                        setError("");
+                      }}
+                    >
+                      {trip.label}
+                      <ArrowUpRight size={12} aria-hidden="true" />
+                    </button>
+                  ))}
+                </div>
+                <p>
+                  Fills city centers only. Generate routes for live route and
+                  forecast data.
+                </p>
               </div>
               <div className="form-divider" />
               <label className="label-icon" htmlFor="departure">
@@ -171,6 +233,20 @@ export default function App() {
                 onChange={(e) => edit(() => setDeparture(e.target.value))}
                 required
               />
+              <button
+                className="text-button departure-reset"
+                type="button"
+                onClick={() =>
+                  edit(() => {
+                    setDeparture(
+                      localInputDate(new Date(Date.now() + 5 * 60000)),
+                    );
+                    setError("");
+                  })
+                }
+              >
+                Leave in 5 minutes
+              </button>
               <label className="label-icon" htmlFor="load">
                 <Truck size={15} />
                 Truck load weight <span>lbs</span>
@@ -269,6 +345,12 @@ export default function App() {
             onSelect={setSelected}
             hour={hour}
             heat={heat}
+            origin={origin}
+            destination={destination}
+            picking={picking}
+            onPickMode={pickOnMap}
+            onPlace={changePlace}
+            disabled={busy}
           />
           <div className="forecast-bar">
             <div className="forecast-title">

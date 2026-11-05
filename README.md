@@ -28,7 +28,7 @@ npm ci
 npm run dev -- --host 127.0.0.1
 ```
 
-Open the Vite URL shown in the terminal, usually http://localhost:5173. Its `/api` proxy talks to Django on port 8000. No database, registration, or API key is needed for the public development services. Search city names and select a result, or enter explicit coordinates. Choose a departure within 48 hours, load in pounds and a 10/25/50-mile sample interval.
+Open the Vite URL shown in the terminal, usually http://localhost:5173. Its `/api` proxy talks to Django on port 8000. No database, registration, or API key is needed for the public development services. Type a city and select an automatic suggestion, choose a labeled example trip, pick A/B pins on the map, or enter explicit coordinates. Pins can be dragged to adjust precise locations. City search is not street-address search. Choose a departure within 48 hours, load in pounds and a 10/25/50-mile sample interval, then press Generate routes.
 
 `.env.example` documents settings; the backend reads environment variables, not a `.env` file automatically. Export your settings or use your deployment provider's environment controls.
 
@@ -46,6 +46,7 @@ All network adapters are mocked **only in automated tests** for deterministic as
 
 ## What the app does
 
+- Offers instant common-city suggestions and example trip inputs, with 200 ms debounced live city search, request cancellation, stale-response protection and bounded in-memory query caching. Successful public city results also use browser/CDN caching. Example trips contain only real city-center coordinates; routes and weather are fetched when requested.
 - Requests a primary OSRM driving route plus up to two alternatives, retaining their actual road geometry.
 - Places checkpoints at the chosen distance interval plus both endpoints, using each road edge's distance and duration to calculate ETA.
 - Fetches Open-Meteo hourly wind, rain, showers and snowfall for those locations; evaluates the forecast hour containing each checkpoint's ETA.
@@ -58,7 +59,7 @@ All network adapters are mocked **only in automated tests** for deterministic as
 
 This is a route-weather comparison **prototype, not a truck navigation or safety system**.
 
-1. **Three alternatives are requested, not fabricated.** OSRM may return only one or two distinct routes for a journey. The app shows what the provider returns with a warning. A commercial routing provider with guaranteed alternatives would be the production upgrade.
+1. **Three alternatives are requested, not fabricated.** OSRM may return only one or two distinct routes for a journey. The app shows what the provider returns with a warning. A production routing provider may improve alternative-route coverage, but three viable routes cannot be assumed for every journey.
 2. **OSRM's public driving profile is not truck-aware.** It does not validate height/weight/axle/hazmat restrictions, bridge clearances or closures. The entered load affects only the assessment's weather rules. ETAs do not include live traffic, loading, rest stops or hours-of-service rules.
 3. Forecasts are hourly model estimates, not observations or guaranteed conditions. Hazards can occur between spatial samples or forecast hours. Check official weather/road advisories before driving. Wind is sustained 10 m wind speed, not gusts or crosswind relative to the truck.
 4. Forecast coverage is seven days from the provider's current date. Departures are limited to the next 48 hours; trips to 120 driving hours; at most 300 checkpoints across all alternatives. Missing or out-of-horizon weather makes a route ineligible.

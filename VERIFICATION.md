@@ -5,8 +5,8 @@ Last local verification: 2026-11-05 UTC.
 ## Passed
 
 - Django system check: no issues.
-- Backend: **59 tests passed**, no skips or expected failures.
-- Frontend: **13 tests passed** across three files.
+- Backend: **61 tests passed**, no skips or expected failures.
+- Frontend: **32 tests passed** across four files.
 - TypeScript checking and Vite production build passed.
 - Full npm dependency audit (including development dependencies): **0 known vulnerabilities reported** after updating Vitest to 4.1.12.
 - Python source compiled successfully.
@@ -30,15 +30,17 @@ Live numbers are observations from these tests, not sample data embedded in the 
 - [Live app](https://spotter-weather-routes-nine.vercel.app): initial production deployment reached READY on 2026-11-05.
 - Public HTML, JavaScript/CSS assets, geocoding and `/api/health/` returned HTTP 200.
 - A real hosted Chicago–Detroit plan returned HTTP 200 with two alternatives, 26 checkpoints and 39 corridor samples ×49 hourly states. First observed request: approximately 1.78 seconds; repeat: 0.314 seconds.
-- These timings do not establish genuine platform cold-start duration. Browser interaction and console checks remain pending.
+- These timings do not establish genuine platform cold-start duration.
+- Browser inspection of the initial deployment completed a real Chicago–Detroit flow, rendered two route cards and 13 checkpoints per route, selected the alternative route, expanded checkpoint details, moved the forecast slider to +48h, and toggled the heatmap off. The browser console showed extension-related errors, with no application error observed in that flow. Vercel warning/error runtime logs returned no matches for the checked 30-minute window.
+- Initial search round trips observed from the test environment took roughly 2.5–8 seconds. This prompted autocomplete, instant common-city choices, pin selection and repeated-query caching. Those are UX improvements, not a guarantee of provider response time.
 
 ## Coverage
 
-Tests include exact weather thresholds and overlap choices, strict load boundaries, invalid numbers and booleans, timezone/departure validation, variable-speed edge timing, provider-total duration normalization, terminal zero-distance edge timing, road geometry, mileage conservation, final-checkpoint risk, unknown/No Travel exclusion, lexicographic ranking, unit conversion, malformed/partial provider responses, API methods and failures, request rate limits, route/checkpoint limits, 49-hour corridor windows, response byte limits, Vercel settings and requirements synchronization. Frontend tests cover search/manual location selection, stale searches and results, route planning input/time conversion, provider errors, risk guards and selected forecast state.
+Tests include exact weather thresholds and overlap choices, strict load boundaries, invalid numbers and booleans, timezone/departure validation, variable-speed edge timing, provider-total duration normalization, terminal zero-distance edge timing, road geometry, mileage conservation, final-checkpoint risk, unknown/No Travel exclusion, lexicographic ranking, unit conversion, malformed/partial provider responses, API methods and failures, request rate limits, route/checkpoint limits, 49-hour corridor windows, response byte limits, Vercel settings and requirements synchronization. Frontend tests cover debounced/cached autocomplete, cancellation and stale responses, keyboard/manual/external location selection, example trips, map pin placement and dragging, busy-state and cancel guards, map view stability, departure reset, route planning input/time conversion, provider errors, risk guards and selected forecast state.
 
 ## Not verified yet
 
-- Real-browser visual/console/end-to-end inspection. Unit/component and HTTP checks are not a substitute for visual QA.
+- Browser verification of the latest location-picker update is pending deployment; the initial production flow above passed. Unit/component and HTTP checks are not a substitute for visual QA.
 - Isolated Vercel cold-start measurements. Hosted build/runtime and the API checks above passed.
 - Three alternatives on every possible trip: no such guarantee is made. The routing provider is asked for three, and unavailable alternatives are disclosed.
 - Docker image build and execution.

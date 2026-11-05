@@ -3,7 +3,7 @@ from unittest.mock import patch
 import httpx
 from django.core.cache import cache
 from django.test import SimpleTestCase
-from routing.providers import ProviderError, fetch_json, get_routes, get_weather, parse_weather, _weather_batch
+from routing.providers import ProviderError, fetch_json, get_routes, get_weather, parse_weather, search_places, _weather_batch
 from routing.planner import at_hour, make_plan
 from routing.tests.test_domain import NOW, inputs, road
 
@@ -128,6 +128,20 @@ class APITests(SimpleTestCase):
         response = self.client.get('/api/geocode/?q=Boston')
         self.assertEqual(response.status_code, 503)
         self.assertEqual(response.json()['error'], 'Unavailable')
+        self.assertNotIn('Cache-Control', response)
+
+    @patch('routing.views.search_places', return_value=[{'name': 'Boston', 'latitude': 42.36, 'longitude': -71.06}])
+    def test_geocode_success_is_publicly_cacheable(self, places):
+        response = self.client.get('/api/geocode/?q=Boston')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['results'][0]['name'], 'Boston')
+        self.assertIn('s-maxage=86400', response['Cache-Control'])
+        self.assertIn('max-age=3600', response['Cache-Control'])
+
+    @patch('routing.providers.fetch_json', return_value={})
+    def test_geocode_normalizes_provider_cache_query(self, fetch):
+        self.assertEqual(search_places('  New   YORK  '), [])
+        self.assertEqual(fetch.call_args.args[1]['name'], 'new york')
 
     @patch('routing.views.make_plan', side_effect=ProviderError('Unavailable'))
     def test_plan_provider_failure(self, plan):

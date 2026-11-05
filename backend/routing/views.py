@@ -34,7 +34,12 @@ def geocode(request):
     if not 2 <= len(query) <= 160:
         return JsonResponse({"error": "Enter a city name between 2 and 160 characters."}, status=400)
     try:
-        return JsonResponse({"results": search_places(query)})
+        response = JsonResponse({"results": search_places(query)})
+        # City results are public and not personalized. Browser and CDN caching
+        # avoid another function/provider round trip for repeated suggestions.
+        # Errors/rate limits deliberately never receive these cache headers.
+        response["Cache-Control"] = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
+        return response
     except ProviderError as exc:
         return JsonResponse({"error": str(exc)}, status=503)
 

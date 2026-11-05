@@ -1,0 +1,121 @@
+.map-workspace {
+  scroll-margin-top: 16px;
+}
+.map-pick-toolbar {
+  padding: 12px 14px;
+  border: 1px solid #dce4df;
+  border-bottom: 0;
+  border-radius: 11px 11px 0 0;
+  background: #f8faf7;
+}
+.map-workspace .map-shell {
+  border-radius: 0;
+}
+.map-pick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.map-pick-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid #c9d6ce;
+  border-radius: 6px;
+  background: white;
+  color: #234337;
+  font-size: 12px;
+  cursor: pointer;
+}
+.map-pick-actions button[aria-pressed="true"] {
+  border-color: #315d40;
+  background: #e4eddd;
+  box-shadow: 0 0 0 1px #315d40;
+}
+.map-pick-actions button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+.map-pick-actions button:focus-visible {
+  outline: 3px solid #50794b;
+  outline-offset: 3px;
+}
+.map-pick-actions b {
+  display: inline-grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background: #315d40;
+  color: white;
+  font-size: 11px;
+}
+.map-pick-actions .map-pick-cancel {
+  margin-left: auto;
+}
+.map-pick-toolbar p {
+  margin: 9px 0 0;
+  color: #445e50;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.map-pick-toolbar p span {
+  color: #66776d;
+}
+.is-picking .leaflet-container {
+  cursor: crosshair;
+}
+.is-picking .leaflet-dragging .leaflet-container {
+  cursor: grabbing;
+}
+.endpoint-marker {
+  display: grid;
+  place-items: start center;
+  background: transparent;
+  border: 0;
+}
+.endpoint-marker span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 3px solid white;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: #315d40;
+  box-shadow: 0 2px 6px #18302066;
+  color: transparent;
+}
+.endpoint-marker::after {
+  content: "A";
+  position: absolute;
+  top: 5px;
+  color: white;
+  font: 700 14px/20px sans-serif;
+  pointer-events: none;
+}
+.destination-marker span {
+  background: #3d536e;
+}
+.destination-marker::after {
+  content: "B";
+}
+.endpoint-marker:focus-visible {
+  outline: 3px solid #315d40;
+  outline-offset: 5px;
+}
+.map-label,
+.legend {
+  pointer-events: none;
+}
+@media (max-width: 600px) {
+  .map-pick-toolbar {
+    padding: 10px;
+  }
+  .map-pick-toolbar p span {
+    display: block;
+  }
+}

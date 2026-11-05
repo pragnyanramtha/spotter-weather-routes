@@ -34,6 +34,9 @@ def fetch_json(url, params, label, ttl=600):
 
 
 def search_places(query):
+    # City names are case-insensitive. Reuse warm provider results across both
+    # input fields and superficial whitespace/capitalization variations.
+    query = " ".join(query.split()).casefold()
     data = fetch_json(settings.GEOCODING_URL, {"name": query, "count": 6, "language": "en", "format": "json"}, "Geocoding service", ttl=86400)
     if not isinstance(data, dict) or not isinstance(data.get("results", []), list):
         raise ProviderError("Geocoding service returned an invalid response.")
