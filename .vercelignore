@@ -1,0 +1,15 @@
+.git
+.venv
+node_modules
+frontend/node_modules
+frontend/dist
+backend/staticfiles
+**/__pycache__
+**/*.pyc
+**/*.tsbuildinfo
+.env
+.env.*
+!\.env.example
+test-results
+playwright-report
+*.log
