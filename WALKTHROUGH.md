@@ -31,9 +31,14 @@ Show provider separation, cached batched calls, input validation, provider failu
 
 - [ ] Review the source and understand the risk/ETA decisions.
 - [ ] Re-run all tests and a current live route request.
-- [ ] Confirm repository visibility and publish the reviewed code.
-- [ ] Deploy and verify the hosted frontend + API end-to-end.
+- [x] Publish the reviewed source to GitHub.
+- [x] Deploy to Vercel and verify public frontend assets and a real hosted API request.
+- [ ] Complete interactive browser/console verification.
 - [ ] Record a genuine 5–10 minute Loom walkthrough.
 - [ ] Review the final three links before submitting them to the employer.
 
-Do not check publishing, hosting, recording or submission off until those steps have actually occurred.
+Live app: https://spotter-weather-routes-nine.vercel.app
+
+Repository: https://github.com/pragnyanramtha/spotter-weather-routes
+
+Recording and employer submission remain separate, unfinished steps.

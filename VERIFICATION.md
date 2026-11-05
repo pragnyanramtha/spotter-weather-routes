@@ -8,7 +8,7 @@ Last local verification: 2026-11-05 UTC.
 - Backend: **59 tests passed**, no skips or expected failures.
 - Frontend: **13 tests passed** across three files.
 - TypeScript checking and Vite production build passed.
-- Production npm dependency audit: **0 known vulnerabilities reported** at check time.
+- Full npm dependency audit (including development dependencies): **0 known vulnerabilities reported** after updating Vitest to 4.1.12.
 - Python source compiled successfully.
 - Vercel configuration data checked against the current published schema: no data-validation errors. See VERCEL.md for the schema meta-validation caveat.
 
@@ -25,14 +25,21 @@ Executed against actual public providers, not runtime mocks:
 
 Live numbers are observations from these tests, not sample data embedded in the app. Weather changes and routing providers can return a different number of alternatives later.
 
+## Hosted Vercel verification
+
+- [Live app](https://spotter-weather-routes-nine.vercel.app): initial production deployment reached READY on 2026-11-05.
+- Public HTML, JavaScript/CSS assets, geocoding and `/api/health/` returned HTTP 200.
+- A real hosted Chicago–Detroit plan returned HTTP 200 with two alternatives, 26 checkpoints and 39 corridor samples ×49 hourly states. First observed request: approximately 1.78 seconds; repeat: 0.314 seconds.
+- These timings do not establish genuine platform cold-start duration. Browser interaction and console checks remain pending.
+
 ## Coverage
 
 Tests include exact weather thresholds and overlap choices, strict load boundaries, invalid numbers and booleans, timezone/departure validation, variable-speed edge timing, provider-total duration normalization, terminal zero-distance edge timing, road geometry, mileage conservation, final-checkpoint risk, unknown/No Travel exclusion, lexicographic ranking, unit conversion, malformed/partial provider responses, API methods and failures, request rate limits, route/checkpoint limits, 49-hour corridor windows, response byte limits, Vercel settings and requirements synchronization. Frontend tests cover search/manual location selection, stale searches and results, route planning input/time conversion, provider errors, risk guards and selected forecast state.
 
 ## Not verified yet
 
-- Real-browser visual/console/end-to-end inspection: the local Chromium process was blocked by the execution environment's socket restriction; a launcher attempt also failed before browser execution. Unit/component and HTTP checks are not a substitute for visual QA.
-- Vercel build/runtime and genuine platform cold-start behavior: no hosted deployment is asserted by this record.
+- Real-browser visual/console/end-to-end inspection. Unit/component and HTTP checks are not a substitute for visual QA.
+- Isolated Vercel cold-start measurements. Hosted build/runtime and the API checks above passed.
 - Three alternatives on every possible trip: no such guarantee is made. The routing provider is asked for three, and unavailable alternatives are disclosed.
 - Docker image build and execution.
 - Employer submission or Loom recording.

@@ -1,5 +1,11 @@
 # Vercel Functions deployment
 
+## Live deployment
+
+[Open the hosted app](https://spotter-weather-routes-nine.vercel.app). The initial production deployment reached READY on 2026-11-05. Public HTML/assets, health, geocoding and a real route plan returned HTTP 200. A Chicago–Detroit plan returned two alternatives, 26 ETA checkpoints and 39 corridor samples ×49 hourly states in approximately 1.78 seconds; a repeated request took 0.314 seconds. These are observed request times, not isolated cold-start measurements.
+
+Interactive browser validation remains pending. See [VERIFICATION.md](VERIFICATION.md) for the current scope of verification.
+
 ## Architecture
 
 The root `vercel.json` uses **Vercel Services, currently beta**:
@@ -56,4 +62,4 @@ Frontend/browser visual inspection is not asserted by these server and unit chec
 5. Check the response on the public URL without an authenticated dashboard session. Do not bypass deployment protection by changing account permissions silently.
 6. Record actual cold/warm request timings, any provider warnings and any remaining unverified UI behavior.
 
-The presence of this file is preparation, not proof of a successful deployment. Deployment status and any live URL must be recorded separately only after verification.
+The initial hosted deployment and API checks above are verified. Future source changes still require a successful deployment and repeat checks before they are considered live.

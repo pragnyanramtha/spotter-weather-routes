@@ -2,6 +2,13 @@
 
 A React + TypeScript and Django assessment prototype that compares real routing alternatives against ETA-specific weather. No runtime mock forecasts, generated roads, or artificial alternatives.
 
+## Live demo
+
+- [Hosted app](https://spotter-weather-routes-nine.vercel.app)
+- [Source repository](https://github.com/pragnyanramtha/spotter-weather-routes)
+
+The frontend and Django API run together on Vercel. See [VERIFICATION.md](VERIFICATION.md) for completed checks and remaining limitations.
+
 ## Run locally
 
 Requires Python 3.12+ and Node 22+.
@@ -71,7 +78,7 @@ python backend/manage.py collectstatic --noinput
 gunicorn --chdir backend config.wsgi:application --bind 0.0.0.0:8000 --workers 2 --threads 4 --timeout 150
 ```
 
-A multistage Dockerfile is included for a reproducible deployment starting point. Building the image or hosting the app is a separate step; inclusion of deployment instructions does not mean it was deployed.
+A multistage Dockerfile is included for a reproducible deployment starting point. The app is hosted on Vercel; the Docker image has not been built or verified.
 
 ### Vercel Functions
 
