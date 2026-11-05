@@ -6,7 +6,7 @@ Last local verification: 2026-11-05 UTC.
 
 - Django system check: no issues.
 - Backend: **61 tests passed**, no skips or expected failures.
-- Frontend: **32 tests passed** across four files.
+- Frontend: **35 tests passed** across four files.
 - TypeScript checking and Vite production build passed.
 - Full npm dependency audit (including development dependencies): **0 known vulnerabilities reported** after updating Vitest to 4.1.12.
 - Python source compiled successfully.
@@ -32,6 +32,8 @@ Live numbers are observations from these tests, not sample data embedded in the 
 - A real hosted Chicago–Detroit plan returned HTTP 200 with two alternatives, 26 checkpoints and 39 corridor samples ×49 hourly states. First observed request: approximately 1.78 seconds; repeat: 0.314 seconds.
 - These timings do not establish genuine platform cold-start duration.
 - Browser inspection of the initial deployment completed a real Chicago–Detroit flow, rendered two route cards and 13 checkpoints per route, selected the alternative route, expanded checkpoint details, moved the forecast slider to +48h, and toggled the heatmap off. The browser console showed extension-related errors, with no application error observed in that flow. Vercel warning/error runtime logs returned no matches for the checked 30-minute window.
+- The location-picker deployment passed desktop-browser checks for instant city suggestions, live remote results, keyboard selection, both map endpoint modes, dragging, Escape cancellation, busy-state disabling, quick departure reset, and a real example-trip plan. A city → pin → same-city text-sync issue found during this review was corrected and now has component/App regression coverage; a final hosted recheck is recorded separately.
+- Geocoding cache headers were verified on the hosted endpoint, including an observed Vercel cache HIT on a repeated city query.
 - Initial search round trips observed from the test environment took roughly 2.5–8 seconds. This prompted autocomplete, instant common-city choices, pin selection and repeated-query caching. Those are UX improvements, not a guarantee of provider response time.
 
 ## Coverage
@@ -40,7 +42,7 @@ Tests include exact weather thresholds and overlap choices, strict load boundari
 
 ## Not verified yet
 
-- Browser verification of the latest location-picker update is pending deployment; the initial production flow above passed. Unit/component and HTTP checks are not a substitute for visual QA.
+- Final hosted recheck of the repeated-selection regression fix is pending. Desktop flows listed above passed; mobile-device visual QA has not been performed.
 - Isolated Vercel cold-start measurements. Hosted build/runtime and the API checks above passed.
 - Three alternatives on every possible trip: no such guarantee is made. The routing provider is asked for three, and unavailable alternatives are disclosed.
 - Docker image build and execution.

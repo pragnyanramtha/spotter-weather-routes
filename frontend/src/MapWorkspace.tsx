@@ -28,6 +28,13 @@ const endpointIcons = {
     iconAnchor: [15, 36],
   }),
 };
+function updateMarkerLabel(marker: L.Marker | null, label: string) {
+  const element = marker?.getElement();
+  element?.setAttribute("aria-label", label);
+  // React-Leaflet updates marker position, but Leaflet's initial title option
+  // is not reactive. Keep the native hover/help text in sync after moving.
+  element?.setAttribute("title", label);
+}
 function pinPlace(
   endpoint: Endpoint,
   latitude: number,
@@ -322,7 +329,7 @@ export default function MapWorkspace({
               <Marker
                 key={endpoint}
                 ref={(marker) => {
-                  marker?.getElement()?.setAttribute("aria-label", label);
+                  updateMarkerLabel(marker, label);
                 }}
                 position={[place.latitude, place.longitude]}
                 icon={endpointIcons[endpoint]}
@@ -332,9 +339,7 @@ export default function MapWorkspace({
                 bubblingMouseEvents={false}
                 eventHandlers={{
                   add: (event) => {
-                    (event.target as L.Marker)
-                      .getElement()
-                      ?.setAttribute("aria-label", label);
+                    updateMarkerLabel(event.target as L.Marker, label);
                   },
                   dragend: (event) => {
                     if (disabled) return;

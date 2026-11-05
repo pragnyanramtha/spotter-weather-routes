@@ -145,6 +145,27 @@ describe("quick trip setup", () => {
     expect(map.props?.destination?.longitude).toBe(-83.0458);
     expect(fetch).not.toHaveBeenCalled();
   });
+  it("restores the example city text after moving a previously suggested city to a map pin", () => {
+    render(<App />);
+    fireEvent.focus(screen.getByLabelText("Origin"));
+    fireEvent.click(
+      screen.getByRole("option", { name: "Chicago, Illinois, US" }),
+    );
+    act(() =>
+      map.props?.onPlace("origin", {
+        name: "Origin pin",
+        latitude: 40,
+        longitude: -75,
+      }),
+    );
+    expect(screen.getByLabelText("Origin")).toHaveValue("Origin pin");
+    fireEvent.click(screen.getByRole("button", { name: /Chicago → Detroit/ }));
+    expect(screen.getByLabelText("Origin")).toHaveValue(
+      "Chicago, Illinois, US",
+    );
+    expect(map.props?.origin?.latitude).toBe(41.8781);
+    expect(map.props?.destination?.longitude).toBe(-83.0458);
+  });
   it("connects map picking to the form and clears picking after placement", () => {
     render(<App />);
     fireEvent.click(screen.getAllByRole("button", { name: "Pick on map" })[0]);

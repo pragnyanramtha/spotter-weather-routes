@@ -121,6 +121,26 @@ describe("map endpoint picking", () => {
     rerender(<MapWorkspace {...base} origin={changed} disabled />);
     expect(mock.markers.at(-1).draggable).toBe(false);
   });
+  it("updates native marker title and accessible label after moving a city pin", () => {
+    const origin = { name: "Boston", latitude: 42, longitude: -71 };
+    const element = document.createElement("div");
+    const leafletMarker = { getElement: () => element };
+    const { rerender } = render(<MapWorkspace {...base} origin={origin} />);
+    mock.markers.at(-1).ref(leafletMarker);
+    expect(element.title).toContain("Origin A: Boston");
+    const pin = {
+      name: "Origin pin (43.0000, -70.0000)",
+      latitude: 43,
+      longitude: -70,
+    };
+    rerender(<MapWorkspace {...base} origin={pin} />);
+    mock.markers.at(-1).ref(leafletMarker);
+    expect(element.title).toContain(pin.name);
+    expect(element.getAttribute("aria-label")).toBe(element.title);
+    element.removeAttribute("title");
+    mock.markers.at(-1).eventHandlers.add({ target: leafletMarker });
+    expect(element.title).toContain(pin.name);
+  });
   it("fits endpoints when chosen outside the map", () => {
     const { rerender } = render(<MapWorkspace {...base} />);
     expect(mock.fitBounds).not.toHaveBeenCalled();

@@ -7,6 +7,7 @@ import {
   screen,
 } from "@testing-library/react";
 import PlaceInput from "./PlaceInput";
+import { SUGGESTED_CITIES } from "./placeSuggestions";
 import { clearPlaceSearchCache, SEARCH_DEBOUNCE_MS } from "./usePlaceSearch";
 const remotePlace = {
   name: "Seattle, Washington, US",
@@ -211,6 +212,37 @@ describe("location input", () => {
     expect(screen.getByLabelText("Origin longitude")).toHaveValue(-90.5);
     await advance();
     expect(fetch).not.toHaveBeenCalled();
+  });
+  it("syncs a previously emitted city object again after an external pin replaces it", () => {
+    const onChange = vi.fn();
+    const original = SUGGESTED_CITIES[0];
+    const { rerender } = render(
+      <PlaceInput label="Origin" value={null} onChange={onChange} />,
+    );
+    fireEvent.focus(screen.getByLabelText("Origin"));
+    fireEvent.click(screen.getByRole("option", { name: original.name }));
+    expect(onChange).toHaveBeenLastCalledWith(original);
+    rerender(
+      <PlaceInput label="Origin" value={original} onChange={onChange} />,
+    );
+    const pin = {
+      name: "Origin pin (40.0000, -75.0000)",
+      latitude: 40,
+      longitude: -75,
+    };
+    rerender(<PlaceInput label="Origin" value={pin} onChange={onChange} />);
+    expect(screen.getByLabelText("Origin")).toHaveValue(pin.name);
+    rerender(
+      <PlaceInput label="Origin" value={original} onChange={onChange} />,
+    );
+    expect(screen.getByLabelText("Origin")).toHaveValue(original.name);
+    fireEvent.click(screen.getByText("Enter coordinates manually"));
+    expect(screen.getByLabelText("Origin latitude")).toHaveValue(
+      original.latitude,
+    );
+    expect(screen.getByLabelText("Origin longitude")).toHaveValue(
+      original.longitude,
+    );
   });
   it("closes suggestions for map picking and invokes the requested mode", () => {
     const onPickMap = vi.fn();

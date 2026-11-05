@@ -40,7 +40,11 @@ export default function PlaceInput({
   // Pins and example trips are external selections, and must update both views.
   // Locally emitted nulls must not erase the text the person is still typing.
   useEffect(() => {
-    if (value === lastEmitted.current) return;
+    const isLocalEcho = value === lastEmitted.current;
+    // Consume the local change once. Keeping an old object here would mistake
+    // a later example-trip selection of that same city for a local echo.
+    lastEmitted.current = undefined;
+    if (isLocalEcho) return;
     setQuery(value?.name || "");
     setLat(value ? String(value.latitude) : "");
     setLon(value ? String(value.longitude) : "");
